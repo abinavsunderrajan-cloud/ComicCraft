@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Comic Preview - ComicCraft
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<header class="main-header">
+
+    <div class="container">
+
+        <h1>🎨 ComicCraft</h1>
+
+        <p>Your AI Generated Comic</p>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <section class="preview-header">
+
+        <h2>
+            {{ comic.title }}
+        </h2>
+
+        <p>
+            Your comic has been generated successfully!
+        </p>
+
+    </section>
+
+
+    <section class="comic-container">
+
+        {% for panel in comic.panels %}
+
+        <article class="comic-panel">
+
+            <div class="panel-number">
+
+                Panel {{ loop.index }}
+
+            </div>
+
+
+            <div class="panel-image">
+
+                <img
+                    src="{{ panel.image_url }}"
+                    alt="Comic panel {{ loop.index }}"
+                >
+
+            </div>
+
+
+            <div class="panel-content">
+
+                <h3>
+                    {{ panel.title }}
+                </h3>
+
+
+                <p class="narration">
+
+                    {{ panel.narration }}
+
+                </p>
+
+
+                {% if panel.dialogue %}
+
+                <div class="dialogue">
+
+                    <strong>
+                        {{ panel.character }}:
+                    </strong>
+
+                    <span>
+                        "{{ panel.dialogue }}"
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+
+    <section class="action-section">
+
+        {% if pdf_url %}
+
+        <a
+            href="{{ pdf_url }}"
+            class="primary-button"
+            download
+        >
+            📥 Download PDF
+        </a>
+
+        {% endif %}
+
+
+        <a
+            href="/"
+            class="secondary-button"
+        >
+            🔄 Create New Comic
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="container">
+
+        <p>
+            ComicCraft © 2026
+        </p>
+
+    </div>
+
+</footer>
+
+
+<script
+    src="{{ url_for('static', path='js/script.js') }}"
+></script>
+
+</body>
+
+</html>

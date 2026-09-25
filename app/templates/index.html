@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ComicCraft - AI Comic Story Creator</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <h1>🎨 ComicCraft</h1>
+
+            <p>
+                AI Comic Story Creator
+            </p>
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <section class="hero">
+            <h2>Create Your Own AI Comic</h2>
+
+            <p>
+                Enter your story idea and let AI create
+                a complete comic story with illustrations.
+            </p>
+        </section>
+
+
+        <section class="card">
+
+            <form
+                id="comicForm"
+                action="/generate"
+                method="POST"
+            >
+
+                <!-- Story Prompt -->
+                <div class="form-group">
+
+                    <label for="story_prompt">
+                        Story Prompt
+                    </label>
+
+                    <textarea
+                        id="story_prompt"
+                        name="story_prompt"
+                        rows="5"
+                        placeholder="Example: A brave fox discovers a magical forest..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- Character -->
+                <div class="form-group">
+
+                    <label for="character_name">
+                        Character Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="character_name"
+                        name="character_name"
+                        placeholder="Example: Felix"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Setting -->
+                <div class="form-group">
+
+                    <label for="setting">
+                        Setting
+                    </label>
+
+                    <input
+                        type="text"
+                        id="setting"
+                        name="setting"
+                        placeholder="Example: Enchanted Forest"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Tone -->
+                <div class="form-group">
+
+                    <label for="story_tone">
+                        Story Tone
+                    </label>
+
+                    <select
+                        id="story_tone"
+                        name="story_tone"
+                        required
+                    >
+
+                        <option value="Adventurous">
+                            Adventurous
+                        </option>
+
+                        <option value="Funny">
+                            Funny
+                        </option>
+
+                        <option value="Dramatic">
+                            Dramatic
+                        </option>
+
+                        <option value="Mysterious">
+                            Mysterious
+                        </option>
+
+                        <option value="Emotional">
+                            Emotional
+                        </option>
+
+                        <option value="Inspirational">
+                            Inspirational
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Art Style -->
+                <div class="form-group">
+
+                    <label for="art_style">
+                        Art Style
+                    </label>
+
+                    <select
+                        id="art_style"
+                        name="art_style"
+                        required
+                    >
+
+                        <option value="Comic Book">
+                            Comic Book
+                        </option>
+
+                        <option value="Anime">
+                            Anime
+                        </option>
+
+                        <option value="Cartoon">
+                            Cartoon
+                        </option>
+
+                        <option value="Manga">
+                            Manga
+                        </option>
+
+                        <option value="Watercolor">
+                            Watercolor
+                        </option>
+
+                        <option value="Digital Art">
+                            Digital Art
+                        </option>
+
+                        <option value="Fantasy Illustration">
+                            Fantasy Illustration
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Number of Panels -->
+                <div class="form-group">
+
+                    <label for="number_of_panels">
+                        Number of Panels
+                    </label>
+
+                    <select
+                        id="number_of_panels"
+                        name="number_of_panels"
+                    >
+
+                        <option value="3">
+                            3 Panels
+                        </option>
+
+                        <option value="4">
+                            4 Panels
+                        </option>
+
+                        <option value="5" selected>
+                            5 Panels
+                        </option>
+
+                        <option value="6">
+                            6 Panels
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    id="generateButton"
+                    class="primary-button"
+                >
+                    ✨ Generate Comic
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <section class="info-section">
+
+            <h2>How ComicCraft Works</h2>
+
+            <div class="info-grid">
+
+                <div class="info-card">
+                    <div class="info-icon">📝</div>
+
+                    <h3>1. Enter Your Idea</h3>
+
+                    <p>
+                        Provide your story prompt,
+                        character, setting and style.
+                    </p>
+                </div>
+
+
+                <div class="info-card">
+                    <div class="info-icon">🤖</div>
+
+                    <h3>2. AI Creates Story</h3>
+
+                    <p>
+                        Gemini generates the comic
+                        outline, narration and dialogue.
+                    </p>
+                </div>
+
+
+                <div class="info-card">
+                    <div class="info-icon">🎨</div>
+
+                    <h3>3. AI Creates Images</h3>
+
+                    <p>
+                        Stable Diffusion generates
+                        illustrations for each panel.
+                    </p>
+                </div>
+
+
+                <div class="info-card">
+                    <div class="info-icon">📕</div>
+
+                    <h3>4. Export Comic</h3>
+
+                    <p>
+                        Your completed comic can be
+                        downloaded as a PDF.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <div class="container">
+
+            <p>
+                ComicCraft © 2026
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <script
+        src="{{ url_for('static', path='js/script.js') }}"
+    ></script>
+
+</body>
+</html>

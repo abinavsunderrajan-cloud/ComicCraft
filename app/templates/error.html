@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Error - ComicCraft
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<header class="main-header">
+
+    <div class="container">
+
+        <h1>🎨 ComicCraft</h1>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <section class="error-card">
+
+        <div class="error-icon">
+            ⚠️
+        </div>
+
+        <h2>
+            Something Went Wrong
+        </h2>
+
+        <p>
+            {{ error }}
+        </p>
+
+
+        <a
+            href="/"
+            class="primary-button"
+        >
+            Try Again
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="container">
+
+        <p>
+            ComicCraft © 2026
+        </p>
+
+    </div>
+
+</footer>
+
+</body>
+
+</html>
