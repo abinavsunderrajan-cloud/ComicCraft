@@ -1,267 +1,139 @@
-import json
 import re
-from pathlib import Path
 
 from fastapi import (
     APIRouter,
     Form,
+    HTTPException,
     Request
 )
-
-from fastapi.responses import (
-    HTMLResponse,
-    JSONResponse,
-    RedirectResponse
-)
-
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
+from app.config import APP_DIR
 from app.schemas import ComicRequest
-
-from app.services.comic_service import (
-    generate_comic
-)
+from app.services.comic_service import generate_comic
 
 
 router = APIRouter()
 
-
 templates = Jinja2Templates(
-    directory="app/templates"
+    directory=str(APP_DIR / "templates")
 )
 
 
-# ---------------------------------------------------------
-# Home page
-# ---------------------------------------------------------
-
-@router.get(
-    "/",
-    response_class=HTMLResponse
-)
+@router.get("/")
 async def home(request: Request):
-
     return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request
-        }
-    )
-
-
-# ---------------------------------------------------------
-# Generate comic
-# ---------------------------------------------------------
-
-@router.post(
-    "/generate",
-    response_class=HTMLResponse
+    request=request,
+    name="index.html",
+    context={"title": "Home"}
 )
+
+@router.post("/generate")
 async def generate(
     request: Request,
-
     story_prompt: str = Form(...),
-
     character_name: str = Form(...),
-
     setting: str = Form(...),
-
     story_tone: str = Form(...),
-
     art_style: str = Form(...),
-
     number_of_panels: int = Form(5)
 ):
-
     try:
-
         comic_request = ComicRequest(
-
             story_prompt=story_prompt,
-
             character_name=character_name,
-
             setting=setting,
-
             story_tone=story_tone,
-
             art_style=art_style,
-
             number_of_panels=number_of_panels
         )
 
-
-        comic = generate_comic(
-            comic_request
-        )
-
+        result = generate_comic(comic_request)
 
         return templates.TemplateResponse(
-
-            "comic_preview.html",
-
-            {
-                "request": request,
-
-                "comic": comic["comic"],
-
-                "pdf_url": comic["pdf_url"]
-            }
-        )
-
-
-    except Exception as exc:
-
-        return templates.TemplateResponse(
-
-            "error.html",
-
-            {
-                "request": request,
-
-                "error": str(exc)
-            },
-
-            status_code=500
-        )
-
-
-# ---------------------------------------------------------
-# JSON API
-# ---------------------------------------------------------
-
-@router.post(
-    "/generate-comic/json"
+    request=request,
+    name="comic_preview.html",
+    context={
+        "comic": result["comic"],
+        "pdf_url": result["pdf_url"]
+    }
 )
+    except Exception as exc:
+        import traceback
+        traceback.print_exc()
+
+        return templates.TemplateResponse(
+    request=request,
+    name="error.html",
+    context={
+        "error": str(exc)
+    },
+    status_code=500
+)
+
+
+@router.post("/generate-comic/json")
 async def generate_comic_json(
     comic_request: ComicRequest
 ):
-
     try:
-
-        result = generate_comic(
-            comic_request
-        )
+        result = generate_comic(comic_request)
 
         return JSONResponse(
             content=result
         )
 
     except Exception as exc:
-
-        return JSONResponse(
-
+        raise HTTPException(
             status_code=500,
-
-            content={
-                "error": str(exc)
-            }
+            detail=str(exc)
         )
 
 
-# ---------------------------------------------------------
-# Test image generation
-# ---------------------------------------------------------
-
-@router.get(
-    "/test-image"
-)
+@router.get("/test-image")
 async def test_image():
+    try:
+        from app.services.image_generator import generate_image
 
-    from app.services.image_generator import (
-        generate_image
-    )
+        image_url = generate_image(
+            "A colorful comic book illustration "
+            "of a young hero standing in a magical forest"
+        )
 
+        return {
+            "status": "success",
+            "image_url": image_url
+        }
 
-    image_path = generate_image(
-
-        prompt=(
-            "A cute fox standing in an "
-            "enchanted magical forest, "
-            "fantasy comic illustration"
-        ),
-
-        panel_number=999
-    )
-
-
-    return {
-        "message": "Image generated successfully",
-        "image": image_path
-    }
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=str(exc)
+        )
 
 
-# ---------------------------------------------------------
-# Export success
-# ---------------------------------------------------------
-
-@router.get(
-    "/export-success",
-    response_class=HTMLResponse
-)
+@router.get("/export-success")
 async def export_success(
     request: Request,
     pdf_url: str = ""
 ):
-
     return templates.TemplateResponse(
-
-        "export_success.html",
-
-        {
-            "request": request,
-            "pdf_url": pdf_url
-        }
-    )
-
-
-# ---------------------------------------------------------
-# Download PDF
-# ---------------------------------------------------------
-
-@router.get(
-    "/download/{filename}"
+    request=request,
+    name="export_success.html",
+    context={
+        "pdf_url": pdf_url
+    }
 )
-async def download_pdf(
-    filename: str
-):
 
+
+@router.get("/download/{filename}")
+async def download_file(filename: str):
     safe_filename = re.sub(
         r"[^a-zA-Z0-9_.-]",
         "",
         filename
     )
-
-
-    if not safe_filename.endswith(".pdf"):
-
-        return JSONResponse(
-
-            status_code=400,
-
-            content={
-                "error": "Invalid PDF filename"
-            }
-        )
-
-
-    file_path = (
-        Path("app/static/exports")
-        / safe_filename
-    )
-
-
-    if not file_path.exists():
-
-        return JSONResponse(
-
-            status_code=404,
-
-            content={
-                "error": "PDF file not found"
-            }
-        )
-
 
     return RedirectResponse(
         url=f"/static/exports/{safe_filename}"

@@ -2,7 +2,6 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-
 class ComicRequest(BaseModel):
 
     story_prompt: str = Field(
@@ -40,6 +39,8 @@ class PanelOutline(BaseModel):
 
     description: str
 
+    image_prompt:str
+
 
 class ComicOutline(BaseModel):
 
@@ -59,6 +60,8 @@ class PanelStory(BaseModel):
     dialogue: str
 
     character: str
+
+    image_prompt:str
 
 
 class ComicStory(BaseModel):

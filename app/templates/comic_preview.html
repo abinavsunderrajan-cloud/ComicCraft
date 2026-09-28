@@ -118,13 +118,15 @@
 
         {% if pdf_url %}
 
-        <a
-            href="{{ pdf_url }}"
-            class="primary-button"
-            download
-        >
-            📥 Download PDF
-        </a>
+       <button
+    type="button"
+    class="primary-button"
+    onclick="downloadComic('{{ pdf_url }}')"
+>
+    📥 Download Your Comic as PDF
+</button>
+
+     
 
         {% endif %}
 
@@ -157,6 +159,25 @@
 <script
     src="{{ url_for('static', path='js/script.js') }}"
 ></script>
+<script>
+function downloadComic(pdfUrl) {
+
+    const link = document.createElement("a");
+
+    link.href = pdfUrl;
+    link.download = "";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    setTimeout(() => {
+        window.location.href = "/export-success";
+    }, 1000);
+}
+</script>
 
 </body>
 
