@@ -25,3 +25,4 @@ app/static/exports/*.pdf
 
 # Logs
 *.log
+config.py
